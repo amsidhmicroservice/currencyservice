@@ -2,7 +2,7 @@ package com.amsidh.mvc.currencyexchange.controller;
 
 import com.amsidh.mvc.currencyexchange.exception.ErrorMessage;
 import com.amsidh.mvc.currencyexchange.exception.MyCustomException;
-import io.fabric8.kubernetes.client.ResourceNotFoundException;
+import com.amsidh.mvc.currencyexchange.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

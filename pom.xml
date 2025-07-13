@@ -19,12 +19,6 @@
         <java.version>11</java.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
 
-        <docker.skip>true</docker.skip>
-
-        <sonar.sources>.</sonar.sources>
-        <sonar.inclusions>pom.xml,/pom.xml,src/main/**,/src/test/**</sonar.inclusions>
-
-
     </properties>
 
     <dependencies>
@@ -41,13 +35,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
-        </dependency>
-
-        <!-- This kubernetes-all library is optional. This will help you to print all available kubernetes object in log during deployment-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-kubernetes-all</artifactId>
-            <version>1.1.10.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -112,134 +99,4 @@
         <module>currency-exchange</module>
         <module>currency-conversion</module>
     </modules>
-
-    <profiles>
-
-        <profile>
-            <id>build-push</id>
-            <activation>
-                <file>
-                    <exists>Dockerfile</exists>
-                </file>
-            </activation>
-            <properties>
-                <docker.image.prefix>amsidhmicroservice</docker.image.prefix>
-                <!--<docker.image.prefix>gcr.io/spring-boot-project-325700</docker.image.prefix>-->
-                <docker.image.name>${project.artifactId}</docker.image.name>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>0.35.0</version>
-                        <configuration>
-                            <verbose>true</verbose>
-                            <images>
-                                <image>
-                                    <name>${docker.image.prefix}/${docker.image.name}</name>
-                                    <alias>${project.name}</alias>
-                                    <build>
-                                        <!--copies artifact to docker build dir in target-->
-                                        <assembly>
-                                            <descriptorRef>artifact-with-dependencies</descriptorRef>
-                                        </assembly>
-                                        <dockerFileDir>${project.basedir}</dockerFileDir>
-                                        <tags>
-                                            <tag>latest</tag>
-                                            <tag>${project.version}</tag>
-                                        </tags>
-                                    </build>
-                                </image>
-                            </images>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>push-to-docker</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                    <goal>push</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>sonar</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <!-- Sonar Properties-->
-                <sonar.sources>.</sonar.sources>
-                <sonar.inclusions>pom.xml,/pom.xml,src/main/**</sonar.inclusions>
-                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-                <sonar.login>d2f629484963979b984a20fe67e8d31a5ebfd5a2</sonar.login>
-                <sonar.organization>amsidhmicroservice</sonar.organization>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonarsource.scanner.maven</groupId>
-                        <artifactId>sonar-maven-plugin</artifactId>
-                        <version>3.7.0.1746</version>
-                        <executions>
-                            <execution>
-                                <id>sonar-cloud</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>sonar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.22.2</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.22.2</version>
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.5</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-and-report</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report-aggregate</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>report-aggregate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-    </profiles>
 </project>

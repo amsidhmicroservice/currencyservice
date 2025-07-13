@@ -10,7 +10,7 @@
     <artifactId>currency-conversion</artifactId>
     <description>Currency-Conversion project for Spring Boot</description>
     <properties>
-        <docker.skip>false</docker.skip>
+        <docker.skip>true</docker.skip>
     </properties>
     <dependencies>
     </dependencies>
